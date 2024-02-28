@@ -1,0 +1,72 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>Library</OutputType>
+		<TargetFramework>net7.0-windows</TargetFramework>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>		
+		<Nullable>enable</Nullable>
+		<UseWindowsForms>true</UseWindowsForms>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<SignAssembly>true</SignAssembly>
+	</PropertyGroup>
+  <ItemGroup>
+    <None Include="Visual\Images\database_add_16.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Visual\Images\database_connect_16.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Visual\Images\database_connect_32.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Visual\Images\database_search_32.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Visual\Images\DatabaseProject.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Visual\Images\wait_2.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Visual\Images\documents_text.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Visual\Images\save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Visual\Images\Mess_Error.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Visual\Images\Mess_Info.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Visual\Images\Mess_Question.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Visual\Images\Mess_Warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Visual\Images\Begin_SELECT_2.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Image1.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Visual\Images\Begin_SELECT_3.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1001" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+  </ItemGroup>
+	<!--  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" /> -->
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
