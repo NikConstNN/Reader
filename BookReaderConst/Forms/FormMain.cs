@@ -9,6 +9,7 @@ using System.Reflection.Emit;
 using System.Xml.Linq;
 using System;
 using System.ComponentModel;
+using System.Linq.Expressions;
 //using Microsoft.Office.Interop.Excel;
 //using Microsoft.Office.Interop.Excel;
 //using Microsoft.Office.Interop.Excel;
@@ -56,6 +57,20 @@ namespace BookReaderConst
 
         void Init()
         {
+            if (string.IsNullOrWhiteSpace(BookReaderParam.CurrentExeDir))
+            {
+                string[] arr = Environment.GetCommandLineArgs();
+                if (arr.Length > 0 && !string.IsNullOrWhiteSpace(arr[0]))
+                {
+                    string dir = $"{Path.GetDirectoryName(arr[0])}\\";
+                    if (Directory.Exists(dir)) 
+                        BookReaderParam.CurrentExeDir = dir;                   
+                }
+            }
+            if (string.IsNullOrWhiteSpace(BookReaderParam.FileJsonParam))
+            {
+                BookReaderParam.FileJsonParam = $"{(BookReaderParam.CurrentExeDir != null && BookReaderParam.CurrentExeDir.Length > 0 ? BookReaderParam.CurrentExeDir : "")}BookReaderParam.json";
+            }
             //m_mousePath = new System.Drawing.Drawing2D.GraphicsPath();
             CurrentParams.CurrentFiles.Clear();
             CurrentParams.RevisionList();

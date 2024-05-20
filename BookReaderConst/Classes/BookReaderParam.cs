@@ -210,6 +210,19 @@ namespace BookReaderConst
         /// Параметры новые 
         /// </summary>
         public bool IsNew { get; set; }
+
+        [JsonIgnore]
+        /// <summary>
+        /// Папка из которого запущено приложение 
+        /// </summary>
+        static public string CurrentExeDir { get; set; } = "";
+
+        [JsonIgnore]
+        /// <summary>
+        /// Полное имя Json-файла сохраненных параметров 
+        /// </summary>
+        static public string FileJsonParam { get; set; } = "";
+
         /// <summary>
         /// Конструктор
         /// </summary>
@@ -227,9 +240,9 @@ namespace BookReaderConst
             BookReaderParam? res = null;
             try
             {
-                if (File.Exists("BookReaderParam.json"))
+                if (File.Exists(FileJsonParam))
                 {
-                    string param = File.ReadAllText("BookReaderParam.json");
+                    string param = File.ReadAllText(FileJsonParam);
                     res = JsonSerializer.Deserialize<BookReaderParam>(param);
                 }
             }
@@ -255,7 +268,7 @@ namespace BookReaderConst
             {
                 var options = new JsonSerializerOptions { WriteIndented = true };
                 string paramJson = JsonSerializer.Serialize(pParam, typeof(BookReaderParam), options);
-                StreamWriter file = File.CreateText("BookReaderParam.json");
+                StreamWriter file = File.CreateText(FileJsonParam);
                 file.WriteLine(paramJson);
                 file.Close();
                 file.Dispose();
