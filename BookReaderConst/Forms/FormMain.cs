@@ -8,6 +8,8 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Reflection.Emit;
 using System.Xml.Linq;
 using System;
+using System.ComponentModel;
+using System.Linq.Expressions;
 //using Microsoft.Office.Interop.Excel;
 //using Microsoft.Office.Interop.Excel;
 //using Microsoft.Office.Interop.Excel;
@@ -55,6 +57,20 @@ namespace BookReaderConst
 
         void Init()
         {
+            if (string.IsNullOrWhiteSpace(BookReaderParam.CurrentExeDir))
+            {
+                string[] arr = Environment.GetCommandLineArgs();
+                if (arr.Length > 0 && !string.IsNullOrWhiteSpace(arr[0]))
+                {
+                    string dir = $"{Path.GetDirectoryName(arr[0])}\\";
+                    if (Directory.Exists(dir)) 
+                        BookReaderParam.CurrentExeDir = dir;                   
+                }
+            }
+            if (string.IsNullOrWhiteSpace(BookReaderParam.FileJsonParam))
+            {
+                BookReaderParam.FileJsonParam = $"{(BookReaderParam.CurrentExeDir != null && BookReaderParam.CurrentExeDir.Length > 0 ? BookReaderParam.CurrentExeDir : "")}BookReaderParam.json";
+            }
             //m_mousePath = new System.Drawing.Drawing2D.GraphicsPath();
             CurrentParams.CurrentFiles.Clear();
             CurrentParams.RevisionList();
@@ -760,7 +776,7 @@ namespace BookReaderConst
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            Init();
+            //Init();
         }
         void ReCalcControlsSize()
         {
@@ -805,40 +821,51 @@ namespace BookReaderConst
                 GetPageInfo(CurrentParams.LastFile, (RichTextBoxEx)textBox[0]);
             }
         }
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+
+        protected override void OnClosing(CancelEventArgs e)
         {
-            if (m_timerInfo != null)
+            base.OnClosing(e);
+            if (!e.Cancel)
             {
-                m_timerInfo.Stop();
-                m_timerInfo.Dispose();
+                if (m_timerInfo != null)
+                {
+                    m_timerInfo.Stop();
+                    m_timerInfo.Dispose();
+                }
+                if (m_timer != null)
+                {
+                    m_timer.Stop();
+                    m_timer.Dispose();
+                }
+                if (m_FormFind != null)
+                {
+                    m_FormFind.NeedClose = true;
+                    m_FormFind.Close();
+                    m_FormFind.Dispose();
+                }
+                SetCurrentMark(tcBooks.SelectedTab == null ? "" : tcBooks.SelectedTab.Name);
+                CurrentParams.FormLocation = new Point(Left, Top);
+                CurrentParams.FormSize = new Size(Width, Height);
+                BookReaderParam.WriteParams(CurrentParams);
+                tcBooks.Deselecting -= TcBooks_Deselecting;
+                tcBooks.SelectedIndexChanged -= TcBooks_SelectedIndexChanged;
+                //if (tcBooks.TabCount > 0 && tcBooks.SelectedTab != null)
+                //    CurrentParams.SetCurrentFileByID(tcBooks.SelectedTab.Name);
+                //else
+                //    CurrentParams.SetCurrentFileByID("");
+                List<string> list = new();
+                foreach (TabPage item in tcBooks.TabPages)
+                    list.Add(item.Name);
+                DeletePages(list);
             }
-            if (m_timer != null)
-            {
-                m_timer.Stop();
-                m_timer.Dispose();
-            }
-            if (m_FormFind != null)
-            {
-                m_FormFind.NeedClose = true;
-                m_FormFind.Close();
-                m_FormFind.Dispose();
-            }
-            SetCurrentMark(tcBooks.SelectedTab == null ? "" : tcBooks.SelectedTab.Name);
-            CurrentParams.FormLocation = new Point(Left, Top);
-            CurrentParams.FormSize = new Size(Width, Height);
-            BookReaderParam.WriteParams(CurrentParams);
-            tcBooks.Deselecting -= TcBooks_Deselecting;
-            tcBooks.SelectedIndexChanged -= TcBooks_SelectedIndexChanged;
-            //if (tcBooks.TabCount > 0 && tcBooks.SelectedTab != null)
-            //    CurrentParams.SetCurrentFileByID(tcBooks.SelectedTab.Name);
-            //else
-            //    CurrentParams.SetCurrentFileByID("");
-            List<string> list = new();
-            foreach (TabPage item in tcBooks.TabPages)
-                list.Add(item.Name);
-            DeletePages(list);
         }
-        
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            Init();
+        }
+       
         void SetCurrentMark(string pNamePage)
         {
             if (!string.IsNullOrWhiteSpace(pNamePage))
