@@ -312,8 +312,8 @@
             Name = "MainForm";
             StartPosition = FormStartPosition.Manual;
             Text = "Просмотр текстовых и RTF файлов";
-            FormClosing += MainForm_FormClosing;
-            Load += MainForm_Load;
+            //FormClosing += MainForm_FormClosing;
+            //Load += MainForm_Load;
             MainToolStrip.ResumeLayout(false);
             MainToolStrip.PerformLayout();
             MainStatusStrip.ResumeLayout(false);
